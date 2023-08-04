@@ -1,7 +1,7 @@
 {
-  "name": "express-mesto-gha",
+  "name": "movies-explorer-api",
   "version": "1.0.0",
-  "description": "[![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml) # Проект Mesto фронтенд + бэкенд https://github.com/Kelendis2/express-mesto-gha",
+  "description": "",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -9,7 +9,7 @@
     "lint": "npx eslint ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Karina Kebets",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
