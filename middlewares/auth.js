@@ -16,6 +16,7 @@ const auth = (req, res, next) => {
   } catch (err) {
     return handleAuthError(req, res, next);
   }
+  return auth;
 };
 
 module.exports = auth;
