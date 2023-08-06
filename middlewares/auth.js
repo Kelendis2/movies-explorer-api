@@ -3,6 +3,7 @@ const { JWT_SECRET } = require('../utils/constants');
 const ErrorAccess = require('../utils/errors/ErrorAccess');
 
 const handleAuthError = (req, res, next) => next(new ErrorAccess('Необходима авторизация'));
+
 const auth = (req, res, next) => {
   const { token } = req.cookies;
   try {
@@ -15,7 +16,6 @@ const auth = (req, res, next) => {
   } catch (err) {
     return handleAuthError(req, res, next);
   }
-  return auth;
 };
 
 module.exports = auth;

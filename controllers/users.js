@@ -1,14 +1,15 @@
 // Импорт констант
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/user');
 const { ValidationError, CastError } = require('mongoose').Error;
+const User = require('../models/user');
 const { JWT_SECRET, ERROR_CODE_UNIQUE } = require('../utils/constants');
 
 // Импорт авторских ошибок
 const NotUnique = require('../utils/errors/ NotUnique');
 const BadRequest = require('../utils/errors/BadRequest');
 const ErrorAccess = require('../utils/errors/ErrorAccess');
+const NotFound = require('../utils/errors/NotFound');
 
 // Контроллер создания пользователя
 const createUser = (req, res, next) => {
@@ -56,15 +57,39 @@ const login = (req, res, next) => {
     })
     .catch(next);
 };
-
-const getCurrentUser = (req, res, next) => {
-  User.find({})
+// Контроллер поиска юзера в бд
+const findById = (req, res, next, id) => {
+  User.findById(id)
+    .orFail(new NotFound(`Пользователь по указанному id: ${id} не найден`))
     .then((user) => res.send(user))
     .catch(next);
 };
 
-const updateUser = (req, res) => {
-  console.log('Запрос есть');
+// Контроллер верного юзера
+const getCurrentUser = (req, res, next) => {
+  const { _id } = req.user;
+  findById(req, res, next, _id);
+};
+
+// Контроллер изменения информациив профиле
+const updateUser = (req, res, next) => {
+  const { name, email } = req.body;
+  const { _id } = req.user;
+
+  User.findByIdAndUpdate({ _id }, { name, email }, { new: true, runValidators: true })
+    .then((user) => {
+      if (!user) {
+        next(new NotFound('Пользователь по указанному id не найден'));
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err instanceof ValidationError || err instanceof CastError) {
+        next(new BadRequest('Данные введены некоректно'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports = {
