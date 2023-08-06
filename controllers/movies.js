@@ -41,7 +41,7 @@ const deleteMovie = (req, res, next) => {
         return Promise.reject(new Forbidden('У пользователя нет возможности удалять фильмы других пользователей'));
       }
       return Movie.deleteOne(movie)
-        .then(() => res.send({ message: 'Карточка удалена' }));
+        .then(() => res.send({ message: 'Фильм успешно удален' }));
     })
     .catch(next);
 };
