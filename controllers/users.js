@@ -57,18 +57,14 @@ const login = (req, res, next) => {
     })
     .catch(next);
 };
-// Контроллер поиска юзера в бд
-const findById = (req, res, next, id) => {
-  User.findById(id)
-    .orFail(new NotFound(`Пользователь по указанному id: ${id} не найден`))
-    .then((user) => res.send(user))
-    .catch(next);
-};
 
-// Контроллер верного юзера
+// Контроллер запроса авторизованного юзера
 const getCurrentUser = (req, res, next) => {
   const { _id } = req.user;
-  findById(req, res, next, _id);
+  User.findById(_id)
+    .orFail(new NotFound(`Пользователь по указанному id: ${_id} не найден`))
+    .then((user) => res.send(user))
+    .catch(next);
 };
 
 // Контроллер изменения информациив профиле
