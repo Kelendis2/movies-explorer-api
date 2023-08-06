@@ -1,13 +1,12 @@
-const mongoose = require('mongoose');
 const { ValidationError } = require('mongoose').Error;
 const Movie = require('../models/movie');
 // Импорт авторских ошибок
-const NotUnique = require('../utils/errors/ NotUnique');
+
 const BadRequest = require('../utils/errors/BadRequest');
-const ErrorAccess = require('../utils/errors/ErrorAccess');
+
 const NotFound = require('../utils/errors/NotFound');
 const Forbidden = require('../utils/errors/Forbidden');
-const { STATUS_OK, INVAILD_ID } = require('../utils/constants');
+const { STATUS_OK } = require('../utils/constants');
 
 const getMovies = (req, res, next) => {
   Movie.find({})
