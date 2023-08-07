@@ -1,12 +1,15 @@
 const { ValidationError } = require('mongoose').Error;
 const Movie = require('../models/movie');
 // Импорт авторских ошибок
-
+const {
+  NOT_FOUND_ID_ERROR,
+  FORBIDDEN_ERROR,
+  BAD_REQUEST_ERROR,
+  STATUS_OK,
+} = require('../utils/constants');
 const BadRequest = require('../utils/errors/BadRequest');
-
 const NotFound = require('../utils/errors/NotFound');
 const Forbidden = require('../utils/errors/Forbidden');
-const { STATUS_OK } = require('../utils/constants');
 
 const getMovies = (req, res, next) => {
   Movie.find({})
@@ -25,7 +28,7 @@ const createMovies = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof ValidationError) {
-        next(new BadRequest('Переданы некорректные данные при создании фильма.'));
+        next(new BadRequest(BAD_REQUEST_ERROR));
       } else {
         next(err);
       }
@@ -35,10 +38,10 @@ const deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
   const { _id } = req.user;
   Movie.findById(movieId)
-    .orFail(new NotFound('Фильм с указанным id не найдена'))
+    .orFail(new NotFound(NOT_FOUND_ID_ERROR))
     .then((movie) => {
       if (movie.owner.toString() !== _id) {
-        return Promise.reject(new Forbidden('У пользователя нет возможности удалять фильмы других пользователей'));
+        return Promise.reject(new Forbidden(FORBIDDEN_ERROR));
       }
       return Movie.deleteOne(movie)
         .then(() => res.send({ message: 'Фильм успешно удален' }));

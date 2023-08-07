@@ -3,7 +3,15 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { ValidationError, CastError } = require('mongoose').Error;
 const User = require('../models/user');
-const { JWT_SECRET, ERROR_CODE_UNIQUE } = require('../utils/constants');
+const {
+  JWT_SECRET,
+  DUPLICATED_USER_ERROR,
+  LOGIN_ERROR,
+  NOT_FOUND_USER_ERROR,
+  BAD_REQUEST_USER_ERROR,
+  BAD_REQUEST_ERROR,
+  ERROR_CODE_UNIQUE,
+} = require('../utils/constants');
 
 // Импорт авторских ошибок
 const NotUnique = require('../utils/errors/ NotUnique');
@@ -25,9 +33,9 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === ERROR_CODE_UNIQUE) {
-        next(new NotUnique('Пользователь с такой почтой уже зарегистрирован'));
+        next(new NotUnique(DUPLICATED_USER_ERROR));
       } else if (err instanceof ValidationError) {
-        next(new BadRequest('Переданы некорректные данные при создании пользователя'));
+        next(new BadRequest(BAD_REQUEST_USER_ERROR));
       } else {
         next(err);
       }
@@ -39,7 +47,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email })
     .select('+password')
-    .orFail(new ErrorAccess('Пользователь не найден'))
+    .orFail(new ErrorAccess(NOT_FOUND_USER_ERROR))
     .then((user) => {
       bcrypt.compare(String(password), user.password)
         .then((isValidUser) => {
@@ -51,7 +59,7 @@ const login = (req, res, next) => {
               sameSite: true,
             }).send({ data: user.toJSON() });
           } else {
-            next(new ErrorAccess({ message: 'Неверный логин или пароль' }));
+            next(new ErrorAccess(LOGIN_ERROR));
           }
         });
     })
@@ -62,7 +70,7 @@ const login = (req, res, next) => {
 const getCurrentUser = (req, res, next) => {
   const { _id } = req.user;
   User.findById(_id)
-    .orFail(new NotFound(`Пользователь по указанному id: ${_id} не найден`))
+    .orFail(new NotFound(NOT_FOUND_USER_ERROR))
     .then((user) => res.send(user))
     .catch(next);
 };
@@ -75,13 +83,13 @@ const updateUser = (req, res, next) => {
   User.findByIdAndUpdate({ _id }, { name, email }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        next(new NotFound('Пользователь по указанному id не найден'));
+        next(new NotFound(NOT_FOUND_USER_ERROR));
       }
       res.send(user);
     })
     .catch((err) => {
       if (err instanceof ValidationError || err instanceof CastError) {
-        next(new BadRequest('Данные введены некоректно'));
+        next(new BadRequest(BAD_REQUEST_ERROR));
       } else {
         next(err);
       }

@@ -1,6 +1,7 @@
 // Импорт пакетов
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { VALIDATION_EMAIL_ERROR } = require('../utils/constants');
 
 // Определение схемы пользователя
 const userSchema = new mongoose.Schema({
@@ -11,7 +12,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (v) => validator.isEmail(v),
-      message: 'Некорректный email',
+      message: VALIDATION_EMAIL_ERROR,
     },
   },
 

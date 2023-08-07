@@ -1,6 +1,7 @@
 // Импорт пакетов
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { VALIDATION_URL_ERROR } = require('../utils/constants');
 
 // Определение схемы фильмов
 const movieSchema = new mongoose.Schema({
@@ -29,7 +30,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => validator.isURL(v),
-      message: 'Введен некорректный адрес url',
+      message: VALIDATION_URL_ERROR,
     },
   },
   trailerLink: { // обязательное поле ссылка на трейлер фильма: строка, URL-адрес
@@ -37,7 +38,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => validator.isURL(v),
-      message: 'Введен некорректный адрес url',
+      message: VALIDATION_URL_ERROR,
     },
   },
   thumbnail: { // обязательное поле миниатюрное изображение постера к фильму: строка, URL-адрес
@@ -45,7 +46,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => validator.isURL(v),
-      message: 'Введен некорректный адрес url',
+      message: VALIDATION_URL_ERROR,
     },
   },
   owner: { // обязательное поле _id пользователя, который сохранил фильм: из схемы потльзователя
