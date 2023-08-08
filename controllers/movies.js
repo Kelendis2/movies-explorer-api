@@ -11,6 +11,7 @@ const BadRequest = require('../utils/errors/BadRequest');
 const NotFound = require('../utils/errors/NotFound');
 const Forbidden = require('../utils/errors/Forbidden');
 
+// Контроллер запроса фильмов
 const getMovies = (req, res, next) => {
   Movie.find({})
     .then((movies) => {
@@ -20,6 +21,7 @@ const getMovies = (req, res, next) => {
     })
     .catch(next);
 };
+// Контроллер создания фильма в избранном
 const createMovies = (req, res, next) => {
   const { _id } = req.user;
   Movie.create({ owner: _id, ...req.body })
@@ -34,6 +36,7 @@ const createMovies = (req, res, next) => {
       }
     });
 };
+// Контроллер удаление фильма из избранного
 const deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
   const { _id } = req.user;
