@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const { errors } = require('celebrate');
 
 const bodyParser = require('body-parser');
@@ -9,6 +10,7 @@ const errorHandler = require('./middlewares/error');
 const router = require('./routes');
 
 const app = express();
+app.use(cors());
 
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
 app.use(bodyParser.json());
