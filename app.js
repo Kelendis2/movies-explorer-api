@@ -12,7 +12,7 @@ const router = require('./routes');
 const app = express();
 app.use(cors());
 
-mongoose.connect('mongodb://127.0.0.1/bitfilmsdb');
+mongoose.connect('mongodb://27017/bitfilmsdb');
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(requestLogger);
