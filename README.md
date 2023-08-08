@@ -62,4 +62,4 @@ POST | `/signin` | проверяет переданные в `body` **email** �
 * helmet
 * jsonwebtoken
 * validator
-* eslin
+* eslint
