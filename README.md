@@ -1,4 +1,4 @@
-# movies-explorer-api# Movies Explorer API
+# Movies Explorer API
 
 ## Описание
 
