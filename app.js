@@ -19,7 +19,4 @@ app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
-app.listen(3000, () => {
-  // eslint-disable-next-line no-console
-  console.log('Server run');
-});
+app.listen(3000);
