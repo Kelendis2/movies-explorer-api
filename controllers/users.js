@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { ValidationError, CastError } = require('mongoose').Error;
 const User = require('../models/user');
+// Импорт авторских ошибок
 const {
   JWT_SECRET,
   DUPLICATED_USER_ERROR,
@@ -13,7 +14,6 @@ const {
   ERROR_CODE_UNIQUE,
 } = require('../utils/constants');
 
-// Импорт авторских ошибок
 const NotUnique = require('../utils/errors/ NotUnique');
 const BadRequest = require('../utils/errors/BadRequest');
 const ErrorAccess = require('../utils/errors/ErrorAccess');
