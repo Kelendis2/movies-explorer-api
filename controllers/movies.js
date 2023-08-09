@@ -13,7 +13,8 @@ const Forbidden = require('../utils/errors/Forbidden');
 
 // Контроллер запроса фильмов
 const getMovies = (req, res, next) => {
-  Movie.find({})
+  const { _id } = req.user;
+  Movie.find({ owner: _id})
     .then((movies) => {
       res
         .status(STATUS_OK)
