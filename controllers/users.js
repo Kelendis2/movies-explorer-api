@@ -50,7 +50,7 @@ const login = (req, res, next) => {
     .select('+password')
     .orFail(new ErrorAccess(NOT_FOUND_USER_ERROR))
     .then((user) => {
-      bcrypt.compare(String(password), password)
+      bcrypt.compare(String(password), user.password)
         .then((isValidUser) => {
           if (isValidUser) {
             const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
