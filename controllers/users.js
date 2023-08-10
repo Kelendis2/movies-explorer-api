@@ -12,6 +12,7 @@ const {
   BAD_REQUEST_USER_ERROR,
   BAD_REQUEST_ERROR,
   ERROR_CODE_UNIQUE,
+  STATUS_OK_201,
 } = require('../utils/constants');
 
 const NotUnique = require('../utils/errors/ NotUnique');
@@ -29,7 +30,7 @@ const createUser = (req, res, next) => {
       name, email, password: hash,
     }))
     .then((user) => {
-      res.send({ data: user });
+      res.status(STATUS_OK_201).send({ data: user });
     })
     .catch((err) => {
       if (err.code === ERROR_CODE_UNIQUE) {
