@@ -47,7 +47,6 @@ const createUser = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email })
-    .select('+password')
     .orFail(new ErrorAccess(NOT_FOUND_USER_ERROR))
     .then((user) => {
       bcrypt.compare(String(password), user.password)
