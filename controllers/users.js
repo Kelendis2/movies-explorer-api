@@ -30,7 +30,7 @@ const createUser = (req, res, next) => {
       name, email, password: hash,
     }))
     .then((user) => {
-      res.status(STATUS_OK_201).send({ data: user });
+      res.status(STATUS_OK_201).send(user);
     })
     .catch((err) => {
       if (err.code === ERROR_CODE_UNIQUE) {
