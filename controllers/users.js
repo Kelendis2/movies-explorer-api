@@ -43,30 +43,6 @@ const createUser = (req, res, next) => {
     });
 };
 
-// Контроллер авторизации
-const login = (req, res, next) => {
-  const { email, password } = req.body;
-  User.findOne({ email })
-    .select('+password')
-    .orFail(new ErrorAccess(NOT_FOUND_USER_ERROR))
-    .then((user) => {
-      bcrypt.compare(String(password), user.password)
-        .then((isValidUser) => {
-          if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-            res.cookie('token', newToken, {
-              maxAge: 36000 * 24 * 7,
-              httpOnly: true,
-              sameSite: true,
-            }).send({ data: user.toJSON() });
-          } else {
-            next(new ErrorAccess(LOGIN_ERROR));
-          }
-        });
-    })
-    .catch(next);
-};
-
 // Контроллер запроса авторизованного юзера
 const getCurrentUser = (req, res, next) => {
   const { _id } = req.user;
@@ -95,6 +71,29 @@ const updateUser = (req, res, next) => {
         next(err);
       }
     });
+};
+// Контроллер авторизации
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+  User.findOne({ email })
+    .select('+password')
+    .orFail(new ErrorAccess(NOT_FOUND_USER_ERROR))
+    .then((user) => {
+      bcrypt.compare(String(password), user.password)
+        .then((isValidUser) => {
+          if (isValidUser) {
+            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
+            res.cookie('token', newToken, {
+              maxAge: 36000 * 24 * 7,
+              httpOnly: true,
+              sameSite: true,
+            }).send({ data: user.toJSON() });
+          } else {
+            next(new ErrorAccess(LOGIN_ERROR));
+          }
+        });
+    })
+    .catch(next);
 };
 
 module.exports = {
