@@ -3,6 +3,7 @@ const JWT_SECRET = '64b47cd7d12efe505db55667';
 const ERROR_CODE_UNIQUE = 11000;
 const STATUS_OK = 200;
 const STATUS_OK_201 = 201;
+const BAD_REQUEST_USER = 400;
 
 const DUPLICATED_USER_ERROR = 'Пользователь с таким email уже зарегистрирован';
 const LOGIN_ERROR = 'Неправильная почта или пароль';
@@ -30,4 +31,5 @@ module.exports = {
   STATUS_OK,
   ERROR_CODE_UNIQUE,
   STATUS_OK_201,
+  BAD_REQUEST_USER,
 };

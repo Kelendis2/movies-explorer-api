@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { validateUserCreate, validateUserUpdate } = require('../utils/validate');
+const { validateUserUpdate } = require('../utils/validate');
 
 const {
   getCurrentUser,

@@ -13,6 +13,7 @@ const {
   BAD_REQUEST_ERROR,
   ERROR_CODE_UNIQUE,
   STATUS_OK_201,
+  BAD_REQUEST_USER
 } = require('../utils/constants');
 
 const NotUnique = require('../utils/errors/ NotUnique');
@@ -35,7 +36,7 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === ERROR_CODE_UNIQUE) {
         next(new NotUnique(DUPLICATED_USER_ERROR));
-      } else if (err instanceof ValidationError) {
+      } else if (err.code === BAD_REQUEST_USER) {
         next(new BadRequest(BAD_REQUEST_USER_ERROR));
       } else {
         next(err);
