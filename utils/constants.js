@@ -14,6 +14,7 @@ const FORBIDDEN_ERROR = 'Недостаточно прав.';
 const SERVER_ERROR = 'На сервере произошла ошибка.';
 const VALIDATION_URL_ERROR = 'Некорректный URL';
 const VALIDATION_EMAIL_ERROR = 'Некорректный email';
+const SUCCESSFUL_AUTHORIZATION = 'Вы успешно авторизованны';
 
 module.exports = {
   JWT_SECRET,
@@ -30,4 +31,5 @@ module.exports = {
   STATUS_OK,
   ERROR_CODE_UNIQUE,
   STATUS_OK_201,
+  SUCCESSFUL_AUTHORIZATION,
 };
