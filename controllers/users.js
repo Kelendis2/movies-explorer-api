@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { ValidationError, CastError } = require('mongoose').Error;
 const User = require('../models/user');
+const { JWT_SECRET, NODE_ENV } = require('../utils/config');
 // Импорт авторских ошибок
 const {
-  JWT_SECRET,
   DUPLICATED_USER_ERROR,
   LOGIN_ERROR,
   NOT_FOUND_USER_ERROR,
@@ -78,7 +78,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email })
     .select('+password')
-    .orFail(new ErrorAccess(NOT_FOUND_USER_ERROR))
+    .orFail(new ErrorAccess(LOGIN_ERROR))
     .then((user) => {
       bcrypt.compare(String(password), user.password)
         .then((isValidUser) => {
@@ -88,6 +88,7 @@ const login = (req, res, next) => {
               maxAge: 36000 * 24 * 7,
               httpOnly: true,
               sameSite: true,
+              secure: NODE_ENV === 'production',
             }).send(SUCCESSFUL_AUTHORIZATION);
           } else {
             next(new ErrorAccess(LOGIN_ERROR));
