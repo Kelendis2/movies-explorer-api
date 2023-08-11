@@ -4,8 +4,9 @@ const Movie = require('../models/movie');
 const {
   NOT_FOUND_ID_ERROR,
   FORBIDDEN_ERROR,
-  BAD_REQUEST_ERROR,
   STATUS_OK,
+  VALIDATION_URL_ERROR,
+  SUCCESSFUL_MESSAGE,
 } = require('../utils/constants');
 const BadRequest = require('../utils/errors/BadRequest');
 const NotFound = require('../utils/errors/NotFound');
@@ -31,7 +32,7 @@ const createMovies = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof ValidationError) {
-        next(new BadRequest(BAD_REQUEST_ERROR));
+        next(new BadRequest(VALIDATION_URL_ERROR));
       } else {
         next(err);
       }
@@ -48,7 +49,7 @@ const deleteMovie = (req, res, next) => {
         return Promise.reject(new Forbidden(FORBIDDEN_ERROR));
       }
       return Movie.deleteOne(movie)
-        .then(() => res.send({ message: 'Фильм успешно удален' }));
+        .then(() => res.send(SUCCESSFUL_MESSAGE));
     })
     .catch(next);
 };
