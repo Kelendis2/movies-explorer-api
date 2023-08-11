@@ -13,7 +13,7 @@ const {
   BAD_REQUEST_ERROR,
   ERROR_CODE_UNIQUE,
   STATUS_OK_201,
-  SUCCESSFUL_AUTHORIZATION
+  SUCCESSFUL_AUTHORIZATION,
 } = require('../utils/constants');
 
 const NotUnique = require('../utils/errors/ NotUnique');
@@ -31,7 +31,7 @@ const createUser = (req, res, next) => {
       name, email, password: hash,
     }))
     .then((user) => {
-      res.status(STATUS_OK_201).send({email: user.email, name: user.name });
+      res.status(STATUS_OK_201).send({ email: user.email, name: user.name });
     })
     .catch((err) => {
       if (err.code === ERROR_CODE_UNIQUE) {
