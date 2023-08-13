@@ -3,15 +3,17 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { ValidationError, CastError } = require('mongoose').Error;
 const User = require('../models/user');
+const { JWT_SECRET, NODE_ENV } = require('../utils/config');
 // Импорт авторских ошибок
 const {
-  JWT_SECRET,
   DUPLICATED_USER_ERROR,
   LOGIN_ERROR,
   NOT_FOUND_USER_ERROR,
   BAD_REQUEST_USER_ERROR,
   BAD_REQUEST_ERROR,
   ERROR_CODE_UNIQUE,
+  STATUS_OK_201,
+  SUCCESSFUL_AUTHORIZATION,
 } = require('../utils/constants');
 
 const NotUnique = require('../utils/errors/ NotUnique');
@@ -24,46 +26,22 @@ const createUser = (req, res, next) => {
   const {
     name, email, password,
   } = req.body;
-  return bcrypt.hash(String(password), 10)
+  bcrypt.hash(String(password), 10)
     .then((hash) => User.create({
       name, email, password: hash,
     }))
     .then((user) => {
-      res.send({ data: user });
+      res.status(STATUS_OK_201).send({ email: user.email, name: user.name });
     })
     .catch((err) => {
       if (err.code === ERROR_CODE_UNIQUE) {
         next(new NotUnique(DUPLICATED_USER_ERROR));
       } else if (err instanceof ValidationError) {
-        next(new BadRequest(BAD_REQUEST_USER_ERROR));
+        next(new BadRequest({ message: BAD_REQUEST_USER_ERROR }));
       } else {
         next(err);
       }
     });
-};
-
-// Контроллер авторизации
-const login = (req, res, next) => {
-  const { email, password } = req.body;
-  User.findOne({ email })
-    .select('+password')
-    .orFail(new ErrorAccess(NOT_FOUND_USER_ERROR))
-    .then((user) => {
-      bcrypt.compare(String(password), user.password)
-        .then((isValidUser) => {
-          if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-            res.cookie('token', newToken, {
-              maxAge: 36000 * 24 * 7,
-              httpOnly: true,
-              sameSite: true,
-            }).send({ data: user.toJSON() });
-          } else {
-            next(new ErrorAccess(LOGIN_ERROR));
-          }
-        });
-    })
-    .catch(next);
 };
 
 // Контроллер запроса авторизованного юзера
@@ -94,6 +72,30 @@ const updateUser = (req, res, next) => {
         next(err);
       }
     });
+};
+// Контроллер авторизации
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+  User.findOne({ email })
+    .select('+password')
+    .orFail(new ErrorAccess(LOGIN_ERROR))
+    .then((user) => {
+      bcrypt.compare(String(password), user.password)
+        .then((isValidUser) => {
+          if (isValidUser) {
+            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
+            res.cookie('token', newToken, {
+              maxAge: 36000 * 24 * 7,
+              httpOnly: true,
+              sameSite: true,
+              secure: NODE_ENV === 'production',
+            }).send(SUCCESSFUL_AUTHORIZATION);
+          } else {
+            next(new ErrorAccess(LOGIN_ERROR));
+          }
+        });
+    })
+    .catch(next);
 };
 
 module.exports = {
