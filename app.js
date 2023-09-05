@@ -1,7 +1,8 @@
 const express = require('express');
-const helmet= require('helmet');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const cors = require('cors');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -22,5 +23,7 @@ app.use(router);
 app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
+
+app.use(cors());
 
 app.listen(PORT);
