@@ -84,12 +84,7 @@ const login = (req, res, next) => {
         .then((isValidUser) => {
           if (isValidUser) {
             const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-            res.cookie('token', newToken, {
-              maxAge: 36000 * 24 * 7,
-              httpOnly: true,
-              sameSite: true,
-              secure: NODE_ENV === 'production',
-            }).send(SUCCESSFUL_AUTHORIZATION);
+            res.send({ token: newToken });
           } else {
             next(new ErrorAccess(LOGIN_ERROR));
           }

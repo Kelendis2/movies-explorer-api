@@ -16,6 +16,12 @@ app.use(helmet());
 app.use(LIMITER);
 
 mongoose.connect(MONGO);
+app.use(cors({
+  origin: 'http://localhost:3001', // Замените на домен вашего клиентского приложения
+  methods: 'GET, POST, PUT, DELETE, OPTIONS',
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+  credentials: true,
+}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(requestLogger);
@@ -23,7 +29,5 @@ app.use(router);
 app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
-
-app.use(cors());
 
 app.listen(PORT);
