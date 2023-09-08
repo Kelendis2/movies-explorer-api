@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { ValidationError, CastError } = require('mongoose').Error;
 const User = require('../models/user');
-const { JWT_SECRET, NODE_ENV } = require('../utils/config');
+const { JWT_SECRET } = require('../utils/config');
 // Импорт авторских ошибок
 const {
   DUPLICATED_USER_ERROR,
@@ -54,25 +54,38 @@ const getCurrentUser = (req, res, next) => {
 };
 
 // Контроллер изменения информациив профиле
-const updateUser = (req, res, next) => {
+// eslint-disable-next-line consistent-return
+const updateUser = async (req, res, next) => {
   const { name, email } = req.body;
   const { _id } = req.user;
 
-  User.findByIdAndUpdate({ _id }, { name, email }, { new: true, runValidators: true })
-    .then((user) => {
-      if (!user) {
-        next(new NotFound(NOT_FOUND_USER_ERROR));
-      }
-      res.send(user);
-    })
-    .catch((err) => {
-      if (err instanceof ValidationError || err instanceof CastError) {
-        next(new BadRequest(BAD_REQUEST_ERROR));
-      } else {
-        next(err);
-      }
-    });
+  try {
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser && existingUser._id.toString() !== _id) {
+      return next(new NotUnique(DUPLICATED_USER_ERROR));
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      { _id },
+      { name, email },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedUser) {
+      return next(new NotFound(NOT_FOUND_USER_ERROR));
+    }
+
+    res.send(updatedUser);
+  } catch (err) {
+    if (err instanceof ValidationError || err instanceof CastError) {
+      next(new BadRequest(BAD_REQUEST_ERROR));
+    } else {
+      next(err);
+    }
+  }
 };
+
 // Контроллер авторизации
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -84,7 +97,7 @@ const login = (req, res, next) => {
         .then((isValidUser) => {
           if (isValidUser) {
             const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-            res.send({ token: newToken });
+            res.send({ token: newToken }, SUCCESSFUL_AUTHORIZATION);
           } else {
             next(new ErrorAccess(LOGIN_ERROR));
           }
