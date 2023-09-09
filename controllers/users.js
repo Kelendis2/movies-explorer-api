@@ -36,7 +36,7 @@ const createUser = (req, res, next) => {
       if (err.code === ERROR_CODE_UNIQUE) {
         next(new NotUnique(DUPLICATED_USER_ERROR));
       } else if (err instanceof ValidationError) {
-        next(new BadRequest(BAD_REQUEST_USER_ERROR));
+        next(new BadRequest({ message: BAD_REQUEST_USER_ERROR }));
       } else {
         next(err);
       }
