@@ -13,7 +13,6 @@ const {
   BAD_REQUEST_ERROR,
   ERROR_CODE_UNIQUE,
   STATUS_OK_201,
-  SUCCESSFUL_AUTHORIZATION,
 } = require('../utils/constants');
 
 const NotUnique = require('../utils/errors/ NotUnique');
@@ -37,7 +36,7 @@ const createUser = (req, res, next) => {
       if (err.code === ERROR_CODE_UNIQUE) {
         next(new NotUnique(DUPLICATED_USER_ERROR));
       } else if (err instanceof ValidationError) {
-        next(new BadRequest({ message: BAD_REQUEST_USER_ERROR }));
+        next(new BadRequest(BAD_REQUEST_USER_ERROR));
       } else {
         next(err);
       }
@@ -97,7 +96,7 @@ const login = (req, res, next) => {
         .then((isValidUser) => {
           if (isValidUser) {
             const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-            res.send({ token: newToken }, SUCCESSFUL_AUTHORIZATION);
+            res.send({ token: newToken });
           } else {
             next(new ErrorAccess(LOGIN_ERROR));
           }

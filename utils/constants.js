@@ -3,7 +3,7 @@ const STATUS_OK = 200;
 const STATUS_OK_201 = 201;
 
 const DUPLICATED_USER_ERROR = 'Пользователь с таким email уже зарегистрирован';
-const LOGIN_ERROR = 'Неправильная почта или пароль';
+const LOGIN_ERROR = 'Вы ввели неправильный логин или пароль. ';
 const NOT_FOUND_USER_ERROR = 'Указанный пользователь не найден.';
 const BAD_REQUEST_USER_ERROR = 'Переданы некорректные данные при создании пользователя';
 const BAD_REQUEST_ERROR = 'Переданы некорректные данные';
