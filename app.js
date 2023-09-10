@@ -2,7 +2,6 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const cors = require('cors');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -12,7 +11,21 @@ const errorHandler = require('./middlewares/error');
 const router = require('./routes');
 
 const app = express();
-app.use(cors())
+// eslint-disable-next-line consistent-return
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // Разрешаем запросы только с этого домена
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Разрешенные HTTP-методы
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Разрешенные заголовки
+  res.setHeader('Access-Control-Allow-Credentials', 'true'); // Разрешаем передачу куки и аутентификацию
+
+  if (req.method === 'OPTIONS') {
+    // Если это предварительный (preflight) запрос, завершаем его успешно
+    return res.sendStatus(200);
+  }
+
+  next(); // Продолжаем обработку запроса
+});
+
 app.use(helmet());
 app.use(LIMITER);
 
