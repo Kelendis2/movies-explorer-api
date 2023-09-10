@@ -15,6 +15,13 @@ const LIMITER = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+const ALLOWED_CORS = [
+  'https://savemovies.kelendis.nomoredomainsicu.ru/',
+  'https://savemovies.kelendis.nomoredomainsicu.ru/',
+  'localhost:3000',
+  'localhost:3000',
+];
+const ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 
 module.exports = {
   PORT,
@@ -23,4 +30,6 @@ module.exports = {
   NODE_ENV,
   LIMITER,
   regexp,
+  ALLOWED_CORS,
+  ALLOWED_METHODS,
 };
