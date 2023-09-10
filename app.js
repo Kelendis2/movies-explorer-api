@@ -2,7 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const {cors} = require('cors');
+const cors = require('cors');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -19,7 +19,6 @@ app.use(LIMITER);
 mongoose.connect(MONGO);
 app.use(bodyParser.json());
 app.use(cookieParser());
-
 app.use(requestLogger);
 app.use(router);
 app.use(errorLogger);
