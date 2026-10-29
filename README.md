@@ -64,6 +64,3 @@ https://api.movies.kelendis.nomoreparties.co/
 - jsonwebtoken
 - validator
 - eslint
-
-  
-21:25
