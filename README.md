@@ -1,65 +1,69 @@
 # Movies Explorer API
 
-## Описание
+## Description
 
-REST API для аутентификации пользователей и сохранения фильмов в избранном. Создан для сервиса поиска фильмов **Movie Explorer**, в котором можно найти фильмы по ключевым словам.
+A REST API for user authentication and saving favorite movies. Built for the **Movie Explorer** movie search service, which allows users to find movies by keywords.
 
-**адрес домена сервера:**
+**Server domain:**
 
-`https://api.movies.kelendis.nomoreparties.co/`
+https://api.movies.kelendis.nomoreparties.co/
 
-## Схемы и модели ресурсов API
+## API Resource Schemas and Models
 
-### Поля схемы `user`:
+### `user` Schema Fields
 
-Поле | Описание
------|------------
-email | Почта пользователя, по которой он регистрируется. Обязательное поле, уникальное для каждого пользователя. Валидируется на соответствие схеме элекстронной почты.
-password | Хеш пароля. Обязательное поле-строка. База данных не возвращает это поле.
-name | Имя пользователя. Обязательное поле-строка от 2 до 30 символов.
+| Field | Description |
+| ----- | ----------- |
+| email | The email address used to register. Required and unique for each user. Validated as an email address. |
+| password | Password hash. Required string field. Excluded from database query results by default. |
+| name | User's name. Required string field, between 2 and 30 characters long. |
 
-### Поля схемы `movie`:
+### `movie` Schema Fields
 
-Поле | Описание
------|------------
-country | Страна создания фильма. Обязательное поле-строка.
-director | Режиссёр фильма. Обязательное поле-строка.
-duration | Длительность фильма. Обязательное поле-число.
-year | Год выпуска фильма. Обязательное поле-строка.
-description | Описание фильма. Обязательное поле-строка.
-image | Cсылка на постер к фильму. Обязательное поле-строка. URL-адрес.
-trailer | Cсылка на трейлер фильма. Обязательное поле-строка. URL-адрес.
-thumbnail | Миниатюрное изображение постера к фильму. Обязательное поле-строка. URL-адрес.
-owner | **_id** пользователя, который сохранил статью. Обязательное поле.
-movieId | **id** фильма, который содержится в ответе сервиса **MoviesExplorer**. Обязательное поле.
-nameRU | Название фильма на русском языке. Обязательное поле-строка.
-nameEN | Название фильма на английском языке. Обязательное поле-строка.
+| Field | Description |
+| ----- | ----------- |
+| country | Country where the movie was produced. Required string field. |
+| director | Movie director. Required string field. |
+| duration | Movie duration. Required numeric field. |
+| year | Movie release year. Required string field. |
+| description | Movie description. Required string field. |
+| image | URL of the movie poster. Required string field. |
+| trailer | URL of the movie trailer. Required string field. |
+| thumbnail | URL of the movie poster thumbnail. Required string field. |
+| owner | `_id` of the user who saved the movie. Required field. |
+| movieId | Movie `id` returned by the **MoviesExplorer** service. Required field. |
+| nameRU | Movie title in Russian. Required string field. |
+| nameEN | Movie title in English. Required string field. |
 
-## Методы и роуты
+## Methods and Routes
 
-Метод | Роут | Описание
------ |------|---------
-GET | `/users/me` | возвращает **email** и **имя**
-PATCH | `/users/me` | обновляет информацию о пользователе с переданными в `body` **email** и **имя**
-POST | `/movies` | создаёт фильм с передаными в `body` **country**, **director**, **duration**, **year**, **description**, **image*, **trailer**, **nameRU**, **nameEN**, **movieId** и **thumbnail**
-GET | `/movies` | возвращает все сохранённые пользователем фильмы
-DELETE | `/movies/movieId` | удаляет сохранённый фильм по его **_id**
-POST | `/signup` | создает пользователя с передаными в `body` **email**, **password**, **name**
-POST | `/signin` | проверяет переданные в `body` **email** и **password** и возвращает **JWT**
-## Используемые технологии 
+| Method | Route | Description |
+| ------ | ----- | ----------- |
+| GET | `/users/me` | Returns the user's `email` and `name`. |
+| PATCH | `/users/me` | Updates the user's information using the `email` and `name` provided in the request body. |
+| POST | `/movies` | Creates a movie using the `country`, `director`, `duration`, `year`, `description`, `image`, `trailer`, `nameRU`, `nameEN`, `movieId`, and `thumbnail` provided in the request body. |
+| GET | `/movies` | Returns all movies saved by the user. |
+| DELETE | `/movies/:movieId` | Deletes a saved movie by its `_id`. |
+| POST | `/signup` | Creates a user using the `email`, `password`, and `name` provided in the request body. |
+| POST | `/signin` | Validates the `email` and `password` provided in the request body and returns a JWT. |
 
-* Expressjs
-* nodemon
-* MongoDB
-* mongoose
-* dotenv
-* cors
-* celebrate
-* bcryptjs
-* express-rate-limit
-* winston
-* express-winston
-* helmet
-* jsonwebtoken
-* validator
-* eslint
+## Technologies Used
+
+- Express.js
+- nodemon
+- MongoDB
+- mongoose
+- dotenv
+- cors
+- celebrate
+- bcryptjs
+- express-rate-limit
+- winston
+- express-winston
+- helmet
+- jsonwebtoken
+- validator
+- eslint
+
+  
+21:25
